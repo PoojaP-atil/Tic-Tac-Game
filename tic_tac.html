@@ -1,0 +1,120 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #eef1f6;
+        }
+
+        .grid-container {
+            display: grid;
+            background-color: #f12000;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #00e28b;
+            font-size: 2rem;
+            color: #374151;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .grid-item:hover {
+            background-color: #b2baf9;
+        }
+
+        .winner {
+            background-color: #ebfab0;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <div class="grid-item" onclick="changesymbol(1)" id="1"></div>
+        <div class="grid-item" onclick="changesymbol(2)" id="2"></div>
+        <div class="grid-item" onclick="changesymbol(3)" id="3"></div>
+        <div class="grid-item" onclick="changesymbol(4)" id="4"></div>
+        <div class="grid-item" onclick="changesymbol(5)" id="5"></div>
+        <div class="grid-item" onclick="changesymbol(6)" id="6"></div>
+        <div class="grid-item" onclick="changesymbol(7)" id="7"></div>
+        <div class="grid-item" onclick="changesymbol(8)" id="8"></div>
+        <div class="grid-item" onclick="changesymbol(9)" id="9"></div>
+    </div>
+    <script>
+        var symbol = "X";
+
+        function changesymbol(a) {
+            var cell = document.getElementById(a);
+            if (cell.innerHTML === "") {
+                cell.innerHTML = symbol;
+                cell.classList.add("winner");
+                symbol = symbol === "X" ? "O" : "X";
+                winnercondition();
+            }
+        }
+
+        function winnercondition() {
+            var combinations = [
+                [1, 2, 3], [4, 5, 6], [7, 8, 9],
+                [1, 4, 7], [2, 5, 8], [3, 6, 9],
+                [1, 5, 9], [3, 5, 7]
+            ];
+
+            for (var i = 0; i < combinations.length; i++) {
+                var [a, b, c] = combinations[i];
+                if (document.getElementById(a).innerHTML !== "" &&
+                    document.getElementById(a).innerHTML === document.getElementById(b).innerHTML &&
+                    document.getElementById(a).innerHTML === document.getElementById(c).innerHTML) {
+                    if (symbol === "X") {
+                        alert("Player 2 is the winner!");
+                    } else {
+                        alert("Player 1 is the winner!");
+                    }
+                    resetGame();
+                    return;
+                }
+            }
+
+            // Check if all grid items are filled
+            var allFilled = true;
+            var cells = document.querySelectorAll('.grid-item');
+            cells.forEach(function(cell) {
+                if (cell.innerHTML === "") {
+                    allFilled = false;
+                }
+            });
+
+            // If all grid items are filled and no winner is found, it's a draw
+            if (allFilled) {
+                alert("It's a draw!");
+                resetGame();
+            }
+        }
+
+        function resetGame() {
+            var cells = document.querySelectorAll('.grid-item');
+            cells.forEach(function(cell) {
+                cell.innerHTML = "";
+                cell.classList.remove("winner");
+            });
+            symbol = "X";
+        }
+    </script>
+</body>
+</html>
